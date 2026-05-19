@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TGH + USF Bariatric Center — Patient Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #F5C518;
+    --navy: #2B3F5C;
+    --teal: #1A7A6E;
+    --cream: #FAFAF7;
+    --warm-white: #FFFFFF;
+    --text-dark: #1C2636;
+    --text-mid: #4A5568;
+    --text-light: #718096;
+    --border: #E2E8F0;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  header {
+    background: var(--navy);
+    color: white;
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+    z-index: 100;
+  }
+
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+
+  .header-logo {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: var(--navy); font-weight: bold;
+  }
+
+  .header-title { font-family: 'DM Serif Display', serif; font-size: 17px; }
+  .header-title span { color: var(--gold); }
+  .header-sub { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 300; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .tab-bar {
+    background: var(--warm-white);
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-shrink: 0; padding: 0 24px;
+  }
+
+  .tab {
+    padding: 14px 20px; font-size: 13px; font-weight: 500;
+    color: var(--text-light); cursor: pointer;
+    border-bottom: 3px solid transparent; transition: all 0.2s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .tab:hover { color: var(--navy); }
+  .tab.active { color: var(--navy); border-bottom-color: var(--gold); }
+
+  .main { flex: 1; display: flex; overflow: hidden; }
+
+  .panel { display: none; flex: 1; overflow: hidden; }
+  .panel.active { display: flex; }
+
+  /* CHAT */
+  .chat-panel { flex-direction: column; background: var(--cream); }
+
+  .chat-disclaimer {
+    background: linear-gradient(135deg, #FFF8E1 0%, #FFF3CD 100%);
+    border-bottom: 1px solid #F0D060;
+    padding: 10px 20px; font-size: 12px; color: #7A6000;
+    display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  }
+
+  .chat-messages {
+    flex: 1; overflow-y: auto; padding: 24px 20px;
+    display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth;
+  }
+
+  .msg { display: flex; gap: 10px; animation: fadeUp 0.3s ease; }
+  .msg.user { flex-direction: row-reverse; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg-avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+  }
+  .msg.bot .msg-avatar { background: var(--gold); color: var(--navy); font-family: 'DM Serif Display', serif; }
+  .msg.user .msg-avatar { background: var(--navy); color: white; }
+
+  .msg-bubble {
+    max-width: 72%; padding: 12px 16px; border-radius: 16px;
+    font-size: 14px; line-height: 1.6; box-shadow: var(--shadow-sm);
+  }
+  .msg.bot .msg-bubble { background: var(--warm-white); color: var(--text-dark); border-radius: 4px 16px 16px 16px; }
+  .msg.user .msg-bubble { background: var(--navy); color: white; border-radius: 16px 4px 16px 16px; }
+  .msg-bubble strong { font-weight: 600; }
+  .msg-bubble ul { margin: 8px 0 4px 16px; }
+  .msg-bubble li { margin-bottom: 4px; }
+  .msg-bubble p + p { margin-top: 8px; }
+
+  .typing-dots { display: flex; gap: 5px; padding: 4px 2px; align-items: center; }
+  .typing-dots span {
+    width: 8px; height: 8px; background: var(--text-light);
+    border-radius: 50%; animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); opacity: 0.5; }
+    40% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  .quick-prompts {
+    padding: 0 20px 12px; display: flex; gap: 8px;
+    flex-wrap: wrap; flex-shrink: 0;
+  }
+
+  .quick-btn {
+    background: var(--warm-white); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px; font-size: 12px;
+    font-family: 'DM Sans', sans-serif; color: var(--text-mid);
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  }
+  .quick-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+
+  .chat-input-area {
+    padding: 12px 20px 16px; background: var(--warm-white);
+    border-top: 1px solid var(--border); flex-shrink: 0;
+  }
+
+  .chat-input-row { display: flex; gap: 10px; align-items: flex-end; }
+
+  #chatInput {
+    flex: 1; border: 1.5px solid var(--border); border-radius: 24px;
+    padding: 10px 18px; font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text-dark); background: var(--cream);
+    resize: none; outline: none; transition: border-color 0.2s;
+    max-height: 100px; line-height: 1.5;
+  }
+  #chatInput:focus { border-color: var(--navy); }
+
+  #sendBtn {
+    width: 42px; height: 42px; background: var(--navy); border: none;
+    border-radius: 50%; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0;
+    transition: background 0.2s, transform 0.1s;
+  }
+  #sendBtn:hover { background: var(--teal); }
+  #sendBtn:active { transform: scale(0.95); }
+  #sendBtn svg { width: 18px; height: 18px; fill: white; }
+
+  /* HANDBOOK */
+  .handbook-panel { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+  .handbook-panel.active { display: flex; }
+
+  .handbook-layout { flex: 1; display: flex; overflow: hidden; }
+
+  .toc-sidebar {
+    width: 240px; flex-shrink: 0; background: var(--warm-white);
+    border-right: 1px solid var(--border); overflow-y: auto; padding: 16px 0;
+  }
+
+  .toc-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); padding: 0 16px 10px; }
+
+  .toc-item {
+    padding: 8px 16px; font-size: 13px; color: var(--text-mid);
+    cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; line-height: 1.4;
+  }
+  .toc-item:hover { background: #F7F8FA; color: var(--navy); }
+  .toc-item.active { background: #EEF2FF; color: var(--navy); border-left-color: var(--gold); font-weight: 500; }
+
+  .handbook-content { flex: 1; overflow-y: auto; padding: 32px 40px; }
+
+  .section-card { display: none; animation: fadeIn 0.3s ease; }
+  .section-card.visible { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-header {
+    background: linear-gradient(135deg, var(--navy) 0%, #3A5278 100%);
+    color: white; border-radius: 12px 12px 0 0; padding: 24px 28px;
+  }
+
+  .section-tag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 6px; }
+  .section-title { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1.25; }
+
+  .section-body {
+    background: white; border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 12px 12px; padding: 28px; line-height: 1.75;
+    color: var(--text-dark); font-size: 14px;
+  }
+
+  .section-body h3 {
+    font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--navy);
+    margin: 20px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--gold); display: inline-block;
+  }
+  .section-body h3:first-child { margin-top: 0; }
+  .section-body p { margin-bottom: 12px; }
+  .section-body ul, .section-body ol { margin: 8px 0 16px 20px; }
+  .section-body li { margin-bottom: 6px; }
+
+  .callout { background: #FFF8E1; border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 13.5px; }
+  .callout.red { background: #FFF5F5; border-left-color: #E53E3E; color: #742A2A; }
+  .callout.teal { background: #E6FFFA; border-left-color: var(--teal); color: #234E52; }
+
+  .diet-stage { background: #F0FFF4; border: 1px solid #9AE6B4; border-radius: 10px; padding: 16px 20px; margin: 12px 0; }
+  .diet-stage-title { font-weight: 600; color: var(--teal); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+
+  .contact-box { background: var(--navy); color: white; border-radius: 10px; padding: 18px 22px; margin-top: 20px; text-align: center; }
+  .contact-box a { color: var(--gold); text-decoration: none; }
+  .contact-box p { font-size: 13px; opacity: 0.85; margin: 4px 0 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-brand">
+    <div class="header-logo">B</div>
+    <div>
+      <div class="header-title">TGH + USF <span>Bariatric Center</span></div>
+      <div class="header-sub">Patient Resource Guide</div>
+    </div>
+  </div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('chat')" id="tab-chat"><span>💬</span> Ask a Question</div>
+  <div class="tab" onclick="switchTab('handbook')" id="tab-handbook"><span>📖</span> Digital Handbook</div>
+</div>
+
+<div class="main">
+
+  <!-- CHAT PANEL -->
+  <div class="panel chat-panel active" id="panel-chat">
+    <div class="chat-disclaimer">
+      ⚠️ This assistant answers questions based on your TGH + USF Bariatric Handbook. It is not a substitute for medical advice. For urgent concerns, call <strong>(813) 844-7473</strong> or 911.
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg bot">
+        <div class="msg-avatar">B</div>
+        <div class="msg-bubble">
+          <strong>Welcome to the TGH + USF Bariatric Center Patient Guide! 👋</strong>
+          <p>I'm here to help answer your questions about the bariatric surgery program — from the surgery pathway and nutrition to what to expect after your procedure.</p>
+          <p>What would you like to know?</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-prompts">
+      <button class="quick-btn" onclick="sendQuick('What are the surgical options available?')">Surgical options</button>
+      <button class="quick-btn" onclick="sendQuick('What is the surgery pathway timeline?')">Surgery timeline</button>
+      <button class="quick-btn" onclick="sendQuick('What vitamins do I need to take after surgery?')">Vitamins & supplements</button>
+      <button class="quick-btn" onclick="sendQuick('What is the diet after surgery?')">Post-op diet</button>
+      <button class="quick-btn" onclick="sendQuick('What is dumping syndrome?')">Dumping syndrome</button>
+      <button class="quick-btn" onclick="sendQuick('When can I return to work after surgery?')">Return to work</button>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="chat-input-row">
+        <textarea id="chatInput" placeholder="Ask anything about the bariatric program..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HANDBOOK PANEL -->
+  <div class="handbook-panel" id="panel-handbook">
+    <div class="handbook-layout">
+      <div class="toc-sidebar">
+        <div class="toc-title">Contents</div>
+        <div class="toc-item active" onclick="showSection('welcome', this)">Welcome & Introduction</div>
+        <div class="toc-item" onclick="showSection('team', this)">Bariatric Center Team</div>
+        <div class="toc-item" onclick="showSection('pathway', this)">Pathway to Surgery</div>
+        <div class="toc-item" onclick="showSection('checklist', this)">Surgery Checklist</div>
+        <div class="toc-item" onclick="showSection('surgical-options', this)">Surgical Options</div>
+        <div class="toc-item" onclick="showSection('weight-loss', this)">Weight-Loss Expectations</div>
+        <div class="toc-item" onclick="showSection('psych', this)">Psychological Factors</div>
+        <div class="toc-item" onclick="showSection('preparing', this)">Preparing for Surgery</div>
+        <div class="toc-item" onclick="showSection('medications', this)">Medication Changes</div>
+        <div class="toc-item" onclick="showSection('hospital', this)">After Surgery: Hospital</div>
+        <div class="toc-item" onclick="showSection('gohome', this)">Going Home</div>
+        <div class="toc-item" onclick="showSection('aftercare', this)">After Surgery: Care</div>
+        <div class="toc-item" onclick="showSection('nutrition-prep', this)">Nutrition Preparation</div>
+        <div class="toc-item" onclick="showSection('vitamins', this)">Vitamins & Supplements</div>
+        <div class="toc-item" onclick="showSection('diet-progression', this)">Diet Progression</div>
+        <div class="toc-item" onclick="showSection('exercise', this)">Exercise</div>
+        <div class="toc-item" onclick="showSection('contact', this)">Contact Information</div>
+      </div>
+
+      <div class="handbook-content" id="handbookContent">
+
+        <div class="section-card visible" id="sec-welcome">
+          <div class="section-header"><div class="section-tag">Introduction</div><div class="section-title">Welcome to the TGH + USF Bariatric Center</div></div>
+          <div class="section-body">
+            <p>Congratulations on your decision to change your life and invest in your health. At the TGH + USF Health Bariatric Center, we have specialized in weight-loss surgery since 1999 and offer every service you may need related to weight loss in one place.</p>
+            <p>Bariatric surgery has the ability to change your life — from treating conditions like diabetes, hypertension and sleep apnea to even reducing your cancer risk.</p>
+            <div class="callout teal">Bariatric surgery is just one tool. For best results, patients need to actively engage in nutritional, emotional and exercise counseling.</div>
+            <h3>This handbook covers:</h3>
+            <ul><li>Bariatric surgery basics</li><li>Diet and nutrition</li><li>Exercise</li><li>Lifestyle changes</li><li>Clinic process</li><li>Overall tips for success</li></ul>
+            <div class="contact-box"><strong>Questions?</strong><p>Call us at <a href="tel:8138447473">(813) 844-7473</a> or connect via <a href="https://mychart.tgh.org/mychart/" target="_blank">MyChart</a></p></div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-team">
+          <div class="section-header"><div class="section-tag">Your Care Team</div><div class="section-title">Bariatric Center Team Members</div></div>
+          <div class="section-body">
+            <h3>Bariatric Surgeon</h3><p>Nationally renowned experts with board certifications in general surgery, specialized fellowship training, and extensive experience. Members of the American Society for Metabolic and Bariatric Surgery and USF faculty.</p>
+            <h3>Obesity Medicine Physician</h3><p>Board-certified with advanced training in obesity and how it affects your entire body.</p>
+            <h3>Advanced Practice Providers (APRN / PA-C)</h3><p>Assist with medical care throughout the weight-loss process — at clinic appointments and during your hospital stay.</p>
+            <h3>Bariatric Registered Dietitian</h3><p>Provides nutrition counseling for weight loss, diet progression after surgery, and education on healthy eating choices.</p>
+            <h3>Bariatric Exercise Physiologist</h3><p>Expert advice on proper exercise techniques, strength training, and a safe workout regimen after surgery.</p>
+            <h3>Bariatric Psychologist</h3><p>Licensed clinical psychologist specially trained in health behavior and obesity. Assesses psychological readiness and provides ongoing support.</p>
+            <h3>Support Staff</h3><p>Available for scheduling, diagnostic testing, billing and insurance authorizations.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-pathway">
+          <div class="section-header"><div class="section-tag">Process</div><div class="section-title">The Pathway to Surgery</div></div>
+          <div class="section-body">
+            <div class="callout teal">Bariatric Surgery is as <strong>SAFE</strong> as having your gallbladder removed, a hysterectomy, or elective hip or knee surgery.</div>
+            <p>The pathway takes <strong>six to eight months</strong> and includes multiple appointments with physicians, dietitians, psychologists, and exercise physiologists.</p>
+            <h3>Monthly Timeline</h3>
+            <ul>
+              <li><strong>Month 1:</strong> Surgeon Pre-Consult + start Nutrition Counseling</li>
+              <li><strong>Month 2:</strong> Medical Evaluation, Psychology Evaluation, Labs</li>
+              <li><strong>Months 1–6:</strong> Monthly Nutrition Counseling — missing even one requires restarting</li>
+              <li><strong>Month 4:</strong> Case Review, Pre-Op Support Group, Exercise Physiology</li>
+              <li><strong>Month 5:</strong> EGD</li>
+              <li><strong>Month 6:</strong> Final Surgeon Consult → SURGERY ⭐</li>
+            </ul>
+            <div class="callout">You must have <strong>NO WEIGHT GAIN</strong> during the program.</div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-checklist">
+          <div class="section-header"><div class="section-tag">Requirements</div><div class="section-title">Surgery Checklist</div></div>
+          <div class="section-body">
+            <h3>Nutrition Counseling</h3><p>Monthly sessions with the Registered Dietitian — Months 1–6 minimum (up to 12 if required by insurance). Must be consecutive with no missed months.</p>
+            <h3>Medical Evaluation</h3><ul><li>Lab work</li><li>Cardiology evaluation (if needed)</li><li>Pulmonology, Nephrology, Endocrinology (if needed)</li></ul>
+            <h3>Other Requirements</h3><ul><li>Nicotine cessation — off all products 90+ days before surgery</li><li>Psychology evaluation</li><li>Pre-Op Support Group (at least 1 session)</li><li>Exercise Physiology appointment</li><li>PCP letter of medical necessity</li></ul>
+            <div class="callout red">These are <strong>insurance requirement minimums</strong>. Authorization confirmed only after final paperwork submission.</div>
+            <div class="contact-box"><strong>Send records to:</strong><p>Fax: (813) 844-1966 &nbsp;|&nbsp; Email: bariatriccenter@tgh.org</p></div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-surgical-options">
+          <div class="section-header"><div class="section-tag">Procedures</div><div class="section-title">Surgical Options</div></div>
+          <div class="section-body">
+            <h3>Roux-en-y Gastric Bypass (RYGB)</h3><p>Restrictive and malabsorptive. Pouch ~30–60 mL (2–4 tablespoons). Expected weight loss: <strong>60–70% of excess weight</strong>.</p>
+            <h3>Vertical Sleeve Gastrectomy</h3><p>Restrictive. ~80% of stomach removed, banana-shaped sleeve of 60–120 mL. Expected weight loss: <strong>50–70% of excess weight</strong>.</p>
+            <h3>Duodenal Switch</h3><p>Restrictive and malabsorptive. May be right for patients with severe diabetes. Surgeon will discuss if you are a candidate.</p>
+            <h3>Gastric Band Removal</h3><p>No longer placed. Existing bands will be removed and converted to sleeve or bypass if needed.</p>
+            <div class="callout teal"><strong>Health benefits</strong> include improvements in blood sugar, blood pressure, joint problems, breathing, mobility and overall function.</div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-weight-loss">
+          <div class="section-header"><div class="section-tag">Goals</div><div class="section-title">Weight-Loss Expectations</div></div>
+          <div class="section-body">
+            <h3>Expected Weight Loss</h3><ul><li><strong>Gastric bypass:</strong> 60–70% of excess weight</li><li><strong>Sleeve gastrectomy:</strong> 50–70% of excess weight</li></ul>
+            <p>Excess body weight = current weight minus ideal weight for your height (BMI 25).</p>
+            <h3>Keys to Success</h3><ul><li>Choose lean, high-protein foods</li><li>Limit high-calorie and starchy foods</li><li>Attend bariatric support group meetings</li><li>Exercise regularly</li></ul>
+            <div class="callout">BMI requirements: <strong>BMI &gt; 40</strong>, or <strong>BMI &gt; 35</strong> with a co-morbid condition.</div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-psych">
+          <div class="section-header"><div class="section-tag">Mental Health</div><div class="section-title">Psychological Factors of Weight Loss</div></div>
+          <div class="section-body">
+            <h3>Mental Health</h3><p>Obesity and mood symptoms like depression and anxiety are often intertwined. The psychologist will help address mental health and challenge negative thinking patterns.</p>
+            <h3>Substance Use</h3><p><strong>No alcohol for at least one year after surgery.</strong> Tobacco products should never be used again. Higher risk of substance abuse post-operatively.</p>
+            <h3>Eating Behaviors</h3><p>Identifying hunger/fullness cues improves your relationship with food. Emotional eating will be addressed throughout the program.</p>
+            <h3>Sleep</h3><p>Inadequate sleep leads to weight gain, cognitive problems, low mood, and irritability. Healthy sleep habits will be discussed.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-preparing">
+          <div class="section-header"><div class="section-tag">Pre-Op</div><div class="section-title">Preparing for Surgery</div></div>
+          <div class="section-body">
+            <h3>Clinic Visits</h3><p>Weight checked at every visit. Must see Registered Dietitian at least once a month. You are responsible for scheduling your own appointments.</p>
+            <h3>Telemedicine</h3><p>Telehealth appointments available. Most group sessions are via telehealth. Invest in a reliable home scale for telehealth visits.</p>
+            <h3>Support Groups</h3><p>At least <strong>one</strong> pre-op support group meeting required. Post-surgery support groups also available monthly.</p>
+            <h3>Smoking</h3><p>Must quit <strong>at least 90 days prior to surgery</strong>. Nicotine test required — must be negative to proceed.</p>
+            <h3>Pregnancy</h3><p>Wait at least <strong>18 months after surgery</strong>. Use two forms of birth control for the first 18 months post-surgery.</p>
+            <h3>Fees (if not covered by insurance)</h3><ul><li>Dietitian 1:1 — $50 | Class setting — $30</li><li>Psychologist initial — $100 | Follow-up — $50</li></ul>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-medications">
+          <div class="section-header"><div class="section-tag">Pre-Op</div><div class="section-title">Changes in Medication</div></div>
+          <div class="section-body">
+            <h3>Diabetes Medications</h3><p>Some may need to be stopped. After surgery, requirement for diabetes medication will decrease. Notify PCP if blood sugar falls below 100.</p>
+            <h3>Diuretics</h3><p>Most patients will not take these after surgery. Consider stopping while on the pre-op liquid diet if dizziness occurs.</p>
+            <h3>Blood Thinners</h3><p>Stop aspirin <strong>10 days prior</strong> to surgery. Other blood thinners stopped at varying times — clarify with your surgeon.</p>
+            <h3>NSAIDs (Motrin, Advil, Aleve)</h3><p>Stop <strong>14 days prior</strong> to surgery. Avoid after gastric bypass. Use <strong>Tylenol</strong> for pain instead.</p>
+            <h3>Large Pills</h3><p>Pills smaller than a Tic Tac or M&amp;M are fine. Otherwise switch to liquid form.</p>
+            <div class="contact-box"><strong>Medication questions?</strong><p>Call <a href="tel:8138447473">(813) 844-7473</a></p></div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-hospital">
+          <div class="section-header"><div class="section-tag">After Surgery</div><div class="section-title">Your Time in the Hospital</div></div>
+          <div class="section-body">
+            <h3>How You'll Feel</h3><p>Groggy as anesthesia wears off. Some pain and bloating is normal — walking helps. Notify nurse of dizziness or blurry vision.</p>
+            <h3>Drinking</h3><p><strong>1 oz of ice/water every 30 minutes</strong> once awake. No more than <strong>3 oz per hour</strong>. Sip slowly — no gulping.</p>
+            <h3>Walking</h3><p>Walk <strong>at least 4 times a day</strong>. Start as soon as awake in recovery. Exercise feet and legs every hour even in bed.</p>
+            <h3>Leg Compression Devices</h3><p>Wear while sleeping or resting. Remove when walking or using the bathroom.</p>
+            <h3>Deep Breathing</h3><p>Use incentive spirometer <strong>every hour</strong> while awake — 10 slow deep breaths each time.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-gohome">
+          <div class="section-header"><div class="section-tag">Discharge</div><div class="section-title">Leaving the Hospital &amp; Going Home</div></div>
+          <div class="section-body">
+            <h3>Length of Stay</h3><p>Most patients spend <strong>1–2 nights</strong> in the hospital.</p>
+            <h3>Activity at Home</h3><ul><li><strong>No lifting</strong> more than 20 lbs for 4 weeks (bypass) or 6 weeks (sleeve)</li><li>Stairs are okay</li><li>Drive only after 24 hours without pain medicine</li><li>First two weeks: walking and stationary bike only</li></ul>
+            <h3>Returning to Work</h3><p>Most patients return at <strong>3 weeks</strong>. Up to 6 weeks off allowed. Ask for return-to-work note at first post-op visit.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-aftercare">
+          <div class="section-header"><div class="section-tag">Recovery</div><div class="section-title">After Surgery: Signs &amp; Symptoms</div></div>
+          <div class="section-body">
+            <h3>Constipation</h3><p>Start Miralax + Benefiber daily for 1 week. Add Senna if still constipated. Must be taken consistently for several weeks.</p>
+            <h3>Nausea</h3><p>Usually caused by dehydration. Take prescribed Zofran. Drink at least <strong>64 oz of water daily</strong>. No carbonated beverages or straws.</p>
+            <h3>Vomiting</h3><p>Usually from eating too quickly or not chewing well. Take dime-sized bites. <strong>Call if vomiting with pain.</strong></p>
+            <h3>Incision Care</h3><p>5–6 small incisions closed with sterile glue. Keep clean and dry. No soaking in baths or pools until fully healed.</p>
+            <div class="callout red">
+              <strong>Call (813) 844-7473 right away if you have:</strong>
+              <ul style="margin-top:8px;"><li>Fever above 101°F</li><li>Increased redness or swelling at incisions</li><li>Cloudy or bloody drainage</li><li>Worsening pain, vomiting, shortness of breath, or heart palpitations</li></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-nutrition-prep">
+          <div class="section-header"><div class="section-tag">Nutrition</div><div class="section-title">Nutrition Preparation</div></div>
+          <div class="section-body">
+            <h3>Pre-Op Checklist</h3>
+            <ul><li>At least 3 meals/day with lean protein at each</li><li>Avoid sugar, high-fat and fried foods</li><li>Avoid sugary and carbonated beverages</li><li>Eliminate caffeine (avoid 2 months post-surgery)</li><li>Eliminate alcohol (avoid 1 year post-surgery)</li><li>Drink at least <strong>64 oz of water daily</strong></li><li>Separate fluids from meals by 30 minutes</li><li>Chew food 20–30 times per bite</li><li>Start Bariatric Fusion Complete chewables (2/day before surgery)</li></ul>
+            <h3>Protein Sources</h3>
+            <ul><li>3 oz chicken breast — 20g | Turkey breast — 26g</li><li>3 oz tilapia — 22g | Salmon — 19g | Tuna — 22g</li><li>1 egg — 7g | ½ cup cottage cheese — 15g</li></ul>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-vitamins">
+          <div class="section-header"><div class="section-tag">Supplements</div><div class="section-title">Vitamins &amp; Lifelong Supplementation</div></div>
+          <div class="section-body">
+            <div class="callout">Take vitamin and mineral supplements <strong>every day for the rest of your life</strong>. Bariatric-specific supplements are required — standard vitamins are not adequate.</div>
+            <h3>Bariatric Multivitamin with Iron</h3><p>Bariatric Fusion® Complete Chewable — 4 tablets/day (2 morning, 2 night). Start 2/day before surgery. Chewable or liquid only.</p>
+            <h3>Vitamin B12</h3><p>1,000 mcg injections monthly starting 3 weeks post-surgery.</p>
+            <h3>Calcium — 1,200–1,500 mg/day</h3><p>Divided doses (max 500 mg at once). Choose brand with 400–800 IU vitamin D. Chewable or liquid only.</p>
+            <h3>Iron — 45–60 mg/day</h3><p>Take <strong>2 hours apart from calcium</strong>. Take with vitamin C. Chewable form only.</p>
+            <h3>Protein Goal</h3><p>At least 60g protein daily. Per shake: <strong>≤200 cal, ≥20g protein, &lt;5g sugar</strong>.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-diet-progression">
+          <div class="section-header"><div class="section-tag">Nutrition</div><div class="section-title">Diet Progression After Surgery</div></div>
+          <div class="section-body">
+            <div class="callout red"><strong>DO NOT progress your diet earlier than recommended.</strong></div>
+            <div class="diet-stage"><div class="diet-stage-title">2 Weeks Before Surgery — PRE-OP DIET</div><p>Protein shakes for breakfast and lunch. Lean meat + 2 cups non-starchy vegetables for dinner. Nothing after midnight before surgery.</p></div>
+            <div class="diet-stage"><div class="diet-stage-title">Surgery Day — CLEAR LIQUIDS</div><p>Water, sugar-free/non-carbonated/caffeine-free drinks, broth, sugar-free gelatin. 1–3 oz every 30 min. Goal: 64 oz daily.</p></div>
+            <div class="diet-stage"><div class="diet-stage-title">Discharge – Day 21 — FULL LIQUIDS</div><p>Protein shakes, skim milk, low-fat Greek yogurt, soups without chunks. At least 60g protein daily.</p></div>
+            <div class="diet-stage"><div class="diet-stage-title">Day 21–30 — PUREED DIET</div><p>Blended/liquefied foods (pudding consistency). 60–90g protein, 650–850 calories daily.</p></div>
+            <div class="diet-stage"><div class="diet-stage-title">Day 31–45 — SOFT DIET</div><p>Well-cooked, moist, easily chewed foods. No dry meats, nuts, raw vegetables.</p></div>
+            <div class="diet-stage"><div class="diet-stage-title">Day 46+ — BARIATRIC REGULAR DIET (Lifelong)</div><p>Low-fat, sugar-free. 90+g protein. Max 1,000 cal/day to 6 months, 1,200 cal/day to 1 year. Eat protein first, then vegetables, then carbs.</p></div>
+            <h3>Dumping Syndrome</h3>
+            <p>Rapid gastric emptying from sugary/fatty foods. <strong>Early (30–60 min):</strong> sweating, nausea, palpitations. <strong>Late (1–3 hours):</strong> low blood sugar, shakiness, fainting. Avoid simple carbs, sugary drinks, fried foods.</p>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-exercise">
+          <div class="section-header"><div class="section-tag">Fitness</div><div class="section-title">Exercise Guidelines</div></div>
+          <div class="section-body">
+            <p>Exercise is the <strong>most important factor in maintaining weight loss</strong>.</p>
+            <h3>Weekly Goals</h3><ul><li>20–30 min activity per day</li><li>150 min moderate OR 75 min vigorous aerobic per week</li><li>Strength training all major muscle groups 2x/week</li><li>300+ min/week to maintain weight loss</li><li>Stand every 30 minutes to reduce sitting time</li></ul>
+            <h3>First 2 Weeks Post-Op</h3><p>Walking and stationary bike only. Walk as much as you feel able from day one at home.</p>
+            <div class="callout teal">The Exercise Physiologist at the Bariatric Center can help create your personal exercise regimen.</div>
+          </div>
+        </div>
+
+        <div class="section-card" id="sec-contact">
+          <div class="section-header"><div class="section-tag">Get in Touch</div><div class="section-title">Contact Information</div></div>
+          <div class="section-body">
+            <div class="contact-box">
+              <strong style="font-size:16px;">TGH + USF Health Bariatric Center</strong>
+              <p>📞 <a href="tel:8138447473">(813) 844-7473</a></p>
+              <p>📠 Fax: (813) 844-1966</p>
+              <p>✉️ <a href="mailto:bariatriccenter@tgh.org">bariatriccenter@tgh.org</a></p>
+              <p>🌐 <a href="https://mychart.tgh.org/mychart/" target="_blank">mychart.tgh.org</a></p>
+            </div>
+            <div class="callout red" style="margin-top:20px;">Not for emergencies. For urgent care call <strong>911</strong>.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  if (tab === 'chat') {
+    document.getElementById('panel-chat').classList.add('active');
+  } else {
+    document.getElementById('panel-handbook').classList.add('active');
+  }
+}
+
+function showSection(id, el) {
+  document.querySelectorAll('.section-card').forEach(s => s.classList.remove('visible'));
+  document.querySelectorAll('.toc-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('visible');
+  el.classList.add('active');
+  document.getElementById('handbookContent').scrollTop = 0;
+}
+
+let conversationHistory = [];
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+  conversationHistory.push({ role: 'user', parts: [{ text }] });
+  const typingId = showTyping();
+  try {
+    const res = await fetch('/.netlify/functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ history: conversationHistory })
+    });
+    const data = await res.json();
+    removeTyping(typingId);
+    const reply = data.reply || "I'm sorry, I had trouble responding. Please call the clinic at (813) 844-7473.";
+    addMessage('bot', reply);
+    conversationHistory.push({ role: 'model', parts: [{ text: reply }] });
+  } catch (err) {
+    removeTyping(typingId);
+    addMessage('bot', "I'm having trouble connecting right now. Please call the clinic at (813) 844-7473 or email bariatriccenter@tgh.org.");
+  }
+}
+
+function addMessage(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = role === 'bot' ? 'B' : 'P';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = formatText(text);
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function formatText(t) {
+  return '<p>' + t
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>') + '</p>';
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  const id = 'typing-' + Date.now();
+  div.id = id;
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar';
+  avatar.textContent = 'B';
+  const bubble = document.createElement('div');
+  bubble.className = 'msg-bubble';
+  bubble.innerHTML = '<div class="typing-dots"><span></span><span></span><span></span></div>';
+  div.appendChild(avatar);
+  div.appendChild(bubble);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+function sendQuick(text) {
+  document.getElementById('chatInput').value = text;
+  sendMessage();
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+</script>
+</body>
+</html>
